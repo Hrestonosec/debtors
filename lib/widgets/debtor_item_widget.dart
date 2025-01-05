@@ -4,8 +4,12 @@ import 'package:flutter/material.dart';
 class DebtorItemWidget extends StatefulWidget {
   final Debtor debtor;
   final ValueChanged<double> onUpdateDebt;
+  final VoidCallback onViewDetails;
 
-  DebtorItemWidget({required this.debtor, required this.onUpdateDebt});
+  DebtorItemWidget(
+      {required this.debtor,
+      required this.onUpdateDebt,
+      required this.onViewDetails});
 
   @override
   State<DebtorItemWidget> createState() => _DebtorItemWidgetState();
@@ -31,9 +35,12 @@ class _DebtorItemWidgetState extends State<DebtorItemWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              widget.debtor.name,
-              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            GestureDetector(
+              onTap: widget.onViewDetails,
+              child: Text(
+                widget.debtor.name,
+                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+              ),
             ),
             SizedBox(height: 8.0),
             Text('Current Debt: ${widget.debtor.debt.toStringAsFixed(2)}'),
