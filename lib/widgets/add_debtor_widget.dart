@@ -1,36 +1,54 @@
 import 'package:flutter/material.dart';
 
 class AddDebtorWidget extends StatefulWidget {
+  final void Function(String name, double initialDebt) onAddDebtor;
+
+  AddDebtorWidget({required this.onAddDebtor});
+
   @override
-  State<AddDebtorWidget> createState() => _AddDebtorWidgetState();
+  _AddDebtorWidgetState createState() => _AddDebtorWidgetState();
 }
 
 class _AddDebtorWidgetState extends State<AddDebtorWidget> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController debtController = TextEditingController();
+
+  void handleAddDebtor() {
+    final name = nameController.text.trim();
+    final debt = double.tryParse(debtController.text);
+    if (name.isNotEmpty && debt != null) {
+      widget.onAddDebtor(name, debt);
+      nameController.clear();
+      debtController.clear();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextField(
-          decoration: InputDecoration(
-            labelText: 'Debtor Name',
-            border: OutlineInputBorder(),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: nameController,
+              decoration: InputDecoration(labelText: "Прізвище"),
+            ),
           ),
-        ),
-        SizedBox(height: 8.0),
-        TextField(
-          decoration: InputDecoration(
-            labelText: 'Initial Debt Amount',
-            border: OutlineInputBorder(),
+          SizedBox(width: 8),
+          Expanded(
+            child: TextField(
+              controller: debtController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(labelText: "Початковий борг"),
+            ),
           ),
-          keyboardType: TextInputType.number,
-        ),
-        SizedBox(height: 8.0),
-        ElevatedButton(
-          onPressed: () {},
-          child: Text('Add Debtor'),
-        ),
-      ],
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: handleAddDebtor,
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,18 +1,27 @@
+import 'package:debtors/models/debtor.dart';
 import 'package:debtors/widgets/debtor_item_widget.dart';
 import 'package:flutter/material.dart';
 
-class DebtorListWidget extends StatefulWidget {
-  @override
-  State<DebtorListWidget> createState() => _DebtorListWidgetState();
-}
+class DebtorListWidget extends StatelessWidget {
+  final List<Debtor> debtors;
+  final ValueChanged<Debtor> onViewDetails;
+  final Function(String, double) onUpdateDebt;
 
-class _DebtorListWidgetState extends State<DebtorListWidget> {
+  DebtorListWidget({
+    required this.debtors,
+    required this.onViewDetails,
+    required this.onUpdateDebt,
+  });
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 10, // Placeholder count
+      itemCount: debtors.length,
       itemBuilder: (context, index) {
-        return DebtorItemWidget();
+        return DebtorItemWidget(
+          debtor: debtors[index],
+          onUpdateDebt: (newDebt) => onUpdateDebt(debtors[index].id, newDebt),
+        );
       },
     );
   }
