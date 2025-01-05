@@ -1,11 +1,27 @@
+import 'package:debtors/models/debtor.dart';
 import 'package:flutter/material.dart';
 
 class DebtorItemWidget extends StatefulWidget {
+  final Debtor debtor;
+  final ValueChanged<double> onUpdateDebt;
+
+  DebtorItemWidget({required this.debtor, required this.onUpdateDebt});
+
   @override
   State<DebtorItemWidget> createState() => _DebtorItemWidgetState();
 }
 
 class _DebtorItemWidgetState extends State<DebtorItemWidget> {
+  final TextEditingController _transactionController = TextEditingController();
+
+  void _updateDebt() {
+    final newDebt = double.tryParse(_transactionController.text);
+    if (newDebt != null) {
+      widget.onUpdateDebt(newDebt);
+      _transactionController.clear();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -16,18 +32,19 @@ class _DebtorItemWidgetState extends State<DebtorItemWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Debtor Name', // Placeholder
+              widget.debtor.name,
               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8.0),
-            Text('Current Debt: \$100.00'), // Placeholder
+            Text('Current Debt: ${widget.debtor.debt.toStringAsFixed(2)}'),
             SizedBox(height: 8.0),
             Row(
               children: [
                 Expanded(
                   child: TextField(
+                    controller: _transactionController,
                     decoration: InputDecoration(
-                      labelText: 'New Transaction',
+                      labelText: 'Update Debt',
                       border: OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.number,
@@ -35,7 +52,7 @@ class _DebtorItemWidgetState extends State<DebtorItemWidget> {
                 ),
                 SizedBox(width: 8.0),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _updateDebt,
                   child: Text('Update'),
                 ),
               ],
