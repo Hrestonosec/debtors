@@ -21,6 +21,7 @@ class DebtorListWidget extends StatelessWidget {
         return DebtorItemWidget(
           debtor: debtors[index],
           onUpdateDebt: (newDebt) => onUpdateDebt(debtors[index].id, newDebt),
+          onViewDetails: () => onViewDetails(debtors[index]),
         );
       },
     );

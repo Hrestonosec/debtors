@@ -1,20 +1,23 @@
 class TransactionsHistory {
-  final int id;
-  final Map<DateTime, double> transactionsList;
+  final String debtorId;
+  final List<MapEntry<DateTime, double>> transactionsList;
 
-  TransactionsHistory(this.id, [Map<DateTime, double>? transactions])
-      : transactionsList = transactions ?? {};
+  TransactionsHistory(this.debtorId,
+      [List<MapEntry<DateTime, double>>? transactions])
+      : transactionsList = transactions ?? [];
 
   void addTransaction(DateTime date, double amount) {
-    transactionsList[date] = amount;
+    transactionsList.insert(0, MapEntry(date, amount));
+    if (transactionsList.length > 10) {
+      transactionsList.removeLast();
+    }
   }
 
   List<MapEntry<DateTime, double>> getSortedTransactions() {
-    return transactionsList.entries.toList()
-      ..sort((a, b) => b.key.compareTo(a.key));
+    return List.from(transactionsList);
   }
 
   @override
   String toString() =>
-      "Транзакції: ${transactionsList.map((k, v) => MapEntry(k, v.toStringAsFixed(2)))}";
+      "Транзакції: ${transactionsList.map((entry) => "${entry.key}: ${entry.value.toStringAsFixed(2)}").join(", ")}";
 }
