@@ -5,12 +5,15 @@ class DebtorItemWidget extends StatefulWidget {
   final Debtor debtor;
   final ValueChanged<double> onUpdateDebt;
   final VoidCallback onViewDetails;
+  final Function(String) onDeleteDebtor;
 
-  const DebtorItemWidget(
-      {super.key,
-      required this.debtor,
-      required this.onUpdateDebt,
-      required this.onViewDetails});
+  const DebtorItemWidget({
+    super.key,
+    required this.debtor,
+    required this.onUpdateDebt,
+    required this.onViewDetails,
+    required this.onDeleteDebtor,
+  });
 
   @override
   State<DebtorItemWidget> createState() => _DebtorItemWidgetState();
@@ -27,6 +30,12 @@ class _DebtorItemWidgetState extends State<DebtorItemWidget> {
     }
   }
 
+  void _deleteDebtor() {
+    if (widget.debtor.debt == 0) {
+      widget.onDeleteDebtor(widget.debtor.id);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -36,12 +45,23 @@ class _DebtorItemWidgetState extends State<DebtorItemWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            GestureDetector(
-              onTap: widget.onViewDetails,
-              child: Text(
-                widget.debtor.name,
-                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  onTap: widget.onViewDetails,
+                  child: Text(
+                    widget.debtor.name,
+                    style:
+                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  color: widget.debtor.debt == 0 ? Colors.red : Colors.grey,
+                  onPressed: widget.debtor.debt == 0 ? _deleteDebtor : null,
+                ),
+              ],
             ),
             SizedBox(height: 8.0),
             Text('Current Debt: ${widget.debtor.debt.toStringAsFixed(2)}'),

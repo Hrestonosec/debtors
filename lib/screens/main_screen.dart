@@ -115,6 +115,15 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  void _deleteDebtor(String id) async {
+    await LocalStorage().deleteDebtor(id); // Видаляємо з БД
+    setState(() {
+      _debtors.removeWhere((debtor) => debtor.id == id); // Видаляємо зі списку
+      _transactionHistories.remove(id); // Очищаємо історію транзакцій
+      _filteredDebtors.removeWhere((debtor) => debtor.id == id);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,6 +138,7 @@ class _MainScreenState extends State<MainScreen> {
               debtors: _filteredDebtors,
               onViewDetails: _viewDetails,
               onUpdateDebt: _updateDebt,
+              onDeleteDebtor: _deleteDebtor,
             ),
           ),
         ],

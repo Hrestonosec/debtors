@@ -87,6 +87,16 @@ class LocalStorage {
     );
   }
 
+  Future<void> deleteDebtor(String id) async {
+    final db = await database;
+    await db.transaction((txn) async {
+      await txn.delete('transactions',
+          where: 'id = ?', whereArgs: [id]); // Видаляємо транзакції
+      await txn.delete('debtors',
+          where: 'id = ?', whereArgs: [id]); // Видаляємо боржника
+    });
+  }
+
   Future<List<Map<String, dynamic>>> getDebtors() async {
     final db = await database;
     return await db.query('debtors');
