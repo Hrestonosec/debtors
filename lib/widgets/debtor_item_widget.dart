@@ -6,8 +6,9 @@ class DebtorItemWidget extends StatefulWidget {
   final ValueChanged<double> onUpdateDebt;
   final VoidCallback onViewDetails;
 
-  DebtorItemWidget(
-      {required this.debtor,
+  const DebtorItemWidget(
+      {super.key,
+      required this.debtor,
       required this.onUpdateDebt,
       required this.onViewDetails});
 

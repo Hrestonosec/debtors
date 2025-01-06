@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AddDebtorWidget extends StatefulWidget {
   final void Function(String name, double initialDebt) onAddDebtor;
 
-  AddDebtorWidget({required this.onAddDebtor});
+  const AddDebtorWidget({super.key, required this.onAddDebtor});
 
   @override
   _AddDebtorWidgetState createState() => _AddDebtorWidgetState();
