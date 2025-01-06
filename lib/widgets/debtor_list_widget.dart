@@ -7,7 +7,8 @@ class DebtorListWidget extends StatelessWidget {
   final ValueChanged<Debtor> onViewDetails;
   final Function(String, double) onUpdateDebt;
 
-  DebtorListWidget({
+  const DebtorListWidget({
+    super.key,
     required this.debtors,
     required this.onViewDetails,
     required this.onUpdateDebt,
