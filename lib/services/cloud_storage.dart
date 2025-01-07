@@ -3,7 +3,15 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
 
 class CloudStorage {
-  final FirebaseStorage _storage = FirebaseStorage.instance;
+  late final FirebaseStorage _storage;
+
+  CloudStorage() {
+    _initialize();
+  }
+
+  void _initialize() {
+    _storage = FirebaseStorage.instance;
+  }
 
   // Шлях до папки для збереження файлів у Firebase Storage
   final String _folderPath = "database_backups";
@@ -40,8 +48,7 @@ class CloudStorage {
 
         if (uploadDateStr != null) {
           final uploadDate = DateTime.parse(uploadDateStr);
-          if (now.difference(uploadDate).inMinutes > 5) {
-            //потім замінити на inDays > 30
+          if (now.difference(uploadDate).inDays > 14) {
             await fileRef.delete();
             print(
                 "Файл ${fileRef.name} видалено, оскільки він старіший за місяць.");

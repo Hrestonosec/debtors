@@ -9,6 +9,10 @@ import 'package:debtors/services/local_storage.dart';
 import 'package:debtors/widgets/search_bar_widget.dart';
 import 'package:debtors/widgets/add_debtor_widget.dart';
 import 'package:debtors/widgets/debtor_list_widget.dart';
+import 'package:intl/intl.dart';
+
+import 'package:path/path.dart' as p;
+import 'package:sqflite/sqflite.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -98,7 +102,9 @@ class _MainScreenState extends State<MainScreen> {
               itemBuilder: (context, index) {
                 final entry = history[index];
                 return ListTile(
-                  title: Text("${entry.key.toLocal()}"),
+                  title: Text(
+                    DateFormat('dd.MM.yy HH:mm').format(entry.key.toLocal()),
+                  ),
                   subtitle: Text("Сума: ${entry.value.toStringAsFixed(2)}"),
                 );
               },
@@ -133,8 +139,9 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _backupDatabase() async {
-    const localDbPath =
-        "path_to_local_db.sqlite"; // Задайте реальний шлях до файлу БД
+    final dbPath = await getDatabasesPath();
+    final localDbPath = p.join(dbPath, 'debt_manager.db');
+
     await _cloudStorage.uploadDatabase(localDbPath);
     await _cloudStorage.deleteOldFiles(); // Очищення старих файлів
   }
