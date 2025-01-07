@@ -1,7 +1,11 @@
-import 'package:debtors/models/transactions_history.dart';
-import 'package:debtors/services/local_storage.dart';
 import 'package:flutter/material.dart';
+
+import 'package:debtors/models/transactions_history.dart';
 import 'package:debtors/models/debtor.dart';
+
+import 'package:debtors/services/cloud_storage.dart';
+import 'package:debtors/services/local_storage.dart';
+
 import 'package:debtors/widgets/search_bar_widget.dart';
 import 'package:debtors/widgets/add_debtor_widget.dart';
 import 'package:debtors/widgets/debtor_list_widget.dart';
@@ -17,11 +21,13 @@ class _MainScreenState extends State<MainScreen> {
   final List<Debtor> _debtors = [];
   final Map<String, TransactionsHistory> _transactionHistories = {};
   final List<Debtor> _filteredDebtors = [];
+  final CloudStorage _cloudStorage = CloudStorage();
 
   @override
   void initState() {
     super.initState();
     _loadDebtors();
+    _backupDatabase();
   }
 
   void _loadDebtors() async {
@@ -51,6 +57,7 @@ class _MainScreenState extends State<MainScreen> {
       _transactionHistories[id] = TransactionsHistory(id);
       _transactionHistories[id]?.addTransaction(DateTime.now(), debt);
     });
+    _backupDatabase();
   }
 
   void _updateDebt(String id, double newDebt) async {
@@ -67,6 +74,7 @@ class _MainScreenState extends State<MainScreen> {
       _transactionHistories[id]
           ?.addTransaction(DateTime.parse(transactionDate), newDebt);
     });
+    _backupDatabase();
   }
 
   void _viewDetails(Debtor debtor) async {
@@ -122,6 +130,13 @@ class _MainScreenState extends State<MainScreen> {
       _transactionHistories.remove(id); // Очищаємо історію транзакцій
       _filteredDebtors.removeWhere((debtor) => debtor.id == id);
     });
+  }
+
+  void _backupDatabase() async {
+    const localDbPath =
+        "path_to_local_db.sqlite"; // Задайте реальний шлях до файлу БД
+    await _cloudStorage.uploadDatabase(localDbPath);
+    await _cloudStorage.deleteOldFiles(); // Очищення старих файлів
   }
 
   @override
