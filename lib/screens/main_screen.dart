@@ -1,10 +1,18 @@
-import 'package:debtors/models/transactions_history.dart';
-import 'package:debtors/services/local_storage.dart';
 import 'package:flutter/material.dart';
+
+import 'package:debtors/models/transactions_history.dart';
 import 'package:debtors/models/debtor.dart';
+
+import 'package:debtors/services/cloud_storage.dart';
+import 'package:debtors/services/local_storage.dart';
+
 import 'package:debtors/widgets/search_bar_widget.dart';
 import 'package:debtors/widgets/add_debtor_widget.dart';
 import 'package:debtors/widgets/debtor_list_widget.dart';
+import 'package:intl/intl.dart';
+
+import 'package:path/path.dart' as p;
+import 'package:sqflite/sqflite.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -17,11 +25,13 @@ class _MainScreenState extends State<MainScreen> {
   final List<Debtor> _debtors = [];
   final Map<String, TransactionsHistory> _transactionHistories = {};
   final List<Debtor> _filteredDebtors = [];
+  final CloudStorage _cloudStorage = CloudStorage();
 
   @override
   void initState() {
     super.initState();
     _loadDebtors();
+    _backupDatabase();
   }
 
   void _loadDebtors() async {
@@ -51,6 +61,7 @@ class _MainScreenState extends State<MainScreen> {
       _transactionHistories[id] = TransactionsHistory(id);
       _transactionHistories[id]?.addTransaction(DateTime.now(), debt);
     });
+    _backupDatabase();
   }
 
   void _updateDebt(String id, double newDebt) async {
@@ -67,6 +78,7 @@ class _MainScreenState extends State<MainScreen> {
       _transactionHistories[id]
           ?.addTransaction(DateTime.parse(transactionDate), newDebt);
     });
+    _backupDatabase();
   }
 
   void _viewDetails(Debtor debtor) async {
@@ -90,7 +102,9 @@ class _MainScreenState extends State<MainScreen> {
               itemBuilder: (context, index) {
                 final entry = history[index];
                 return ListTile(
-                  title: Text("${entry.key.toLocal()}"),
+                  title: Text(
+                    DateFormat('dd.MM.yy HH:mm').format(entry.key.toLocal()),
+                  ),
                   subtitle: Text("Сума: ${entry.value.toStringAsFixed(2)}"),
                 );
               },
@@ -122,6 +136,14 @@ class _MainScreenState extends State<MainScreen> {
       _transactionHistories.remove(id); // Очищаємо історію транзакцій
       _filteredDebtors.removeWhere((debtor) => debtor.id == id);
     });
+  }
+
+  void _backupDatabase() async {
+    final dbPath = await getDatabasesPath();
+    final localDbPath = p.join(dbPath, 'debt_manager.db');
+
+    await _cloudStorage.uploadDatabase(localDbPath);
+    await _cloudStorage.deleteOldFiles(); // Очищення старих файлів
   }
 
   @override

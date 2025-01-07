@@ -64,7 +64,7 @@ class _DebtorItemWidgetState extends State<DebtorItemWidget> {
               ],
             ),
             SizedBox(height: 8.0),
-            Text('Current Debt: ${widget.debtor.debt.toStringAsFixed(2)}'),
+            Text('Поточний борг: ${widget.debtor.debt.toStringAsFixed(2)}'),
             SizedBox(height: 8.0),
             Row(
               children: [
@@ -72,7 +72,7 @@ class _DebtorItemWidgetState extends State<DebtorItemWidget> {
                   child: TextField(
                     controller: _transactionController,
                     decoration: InputDecoration(
-                      labelText: 'Update Debt',
+                      labelText: 'Введіть суму',
                       border: OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.number,
@@ -81,7 +81,7 @@ class _DebtorItemWidgetState extends State<DebtorItemWidget> {
                 SizedBox(width: 8.0),
                 ElevatedButton(
                   onPressed: _updateDebt,
-                  child: Text('Update'),
+                  child: Text('Оновити'),
                 ),
               ],
             ),

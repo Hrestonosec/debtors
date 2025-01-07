@@ -35,7 +35,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   Widget build(BuildContext context) {
     return TextField(
       decoration: const InputDecoration(
-        labelText: 'Search Debtors',
+        labelText: 'Знайти боржника',
         border: OutlineInputBorder(),
       ),
       onChanged: _filterDebtors,
