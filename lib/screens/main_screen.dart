@@ -13,6 +13,7 @@ import 'package:intl/intl.dart';
 
 import 'package:path/path.dart' as p;
 import 'package:sqflite/sqflite.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -38,10 +39,10 @@ class _MainScreenState extends State<MainScreen> {
     final debtorsData = await LocalStorage().getDebtors();
     setState(() {
       _debtors.addAll(debtorsData.map((data) => Debtor(
-            id: data['id'],
-            name: data['name'],
-            debt: data['debt'],
-          )));
+          id: data['id'],
+          name: data['name'],
+          debt: data['debt'],
+          debtColor: data['debt'] < 0 ? Colors.green : Colors.red)));
       _filteredDebtors
           .addAll(_debtors); // Ініціалізація списку для відображення
     });
@@ -55,9 +56,13 @@ class _MainScreenState extends State<MainScreen> {
       'debt': debt,
     });
     setState(() {
-      final newDebtor = Debtor(id: id, name: name, debt: debt);
-      _debtors.add(newDebtor);
-      _filteredDebtors.add(newDebtor);
+      final newDebtor = Debtor(
+          id: id,
+          name: name,
+          debt: debt,
+          debtColor: debt < 0 ? Colors.green : Colors.red);
+      _debtors.insert(0, newDebtor);
+      _filteredDebtors.insert(0, newDebtor);
       _transactionHistories[id] = TransactionsHistory(id);
       _transactionHistories[id]?.addTransaction(DateTime.now(), debt);
     });
@@ -77,6 +82,11 @@ class _MainScreenState extends State<MainScreen> {
       debtor.debt += newDebt;
       _transactionHistories[id]
           ?.addTransaction(DateTime.parse(transactionDate), newDebt);
+      if (debtor.debt < 0) {
+        debtor.debtColor = Colors.green;
+      } else {
+        debtor.debtColor = Colors.red;
+      }
     });
     _backupDatabase();
   }
@@ -149,21 +159,30 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          SearchBarWidget(debtors: _debtors, onSearchResult: _onSearchResult),
-          AddDebtorWidget(
-            onAddDebtor: _addDebtor,
-          ),
-          Expanded(
-            child: DebtorListWidget(
-              debtors: _filteredDebtors,
-              onViewDetails: _viewDetails,
-              onUpdateDebt: _updateDebt,
-              onDeleteDebtor: _deleteDebtor,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                SearchBarWidget(
+                  debtors: _debtors,
+                  onSearchResult: _onSearchResult,
+                ),
+                AddDebtorWidget(
+                  onAddDebtor: _addDebtor,
+                ),
+              ],
             ),
-          ),
-        ],
+            Expanded(
+              child: DebtorListWidget(
+                debtors: _filteredDebtors,
+                onViewDetails: _viewDetails,
+                onUpdateDebt: _updateDebt,
+                onDeleteDebtor: _deleteDebtor,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

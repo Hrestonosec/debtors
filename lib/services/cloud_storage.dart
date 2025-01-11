@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 class CloudStorage {
@@ -29,9 +30,9 @@ class CloudStorage {
           'uploadDate': DateTime.now().toIso8601String(),
         }),
       );
-      print("Файл $fileName завантажено успішно!");
+      Fluttertoast.showToast(msg: "Завантажено!");
     } catch (e) {
-      print("Помилка під час завантаження бази даних: $e");
+      Fluttertoast.showToast(msg: "ПОМИЛКА!");
     }
   }
 

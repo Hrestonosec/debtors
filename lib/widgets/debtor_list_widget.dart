@@ -7,13 +7,15 @@ class DebtorListWidget extends StatelessWidget {
   final ValueChanged<Debtor> onViewDetails;
   final Function(String, double) onUpdateDebt;
   final Function(String) onDeleteDebtor;
+  Color debtColor;
 
-  const DebtorListWidget({
+  DebtorListWidget({
     super.key,
     required this.debtors,
     required this.onViewDetails,
     required this.onUpdateDebt,
     required this.onDeleteDebtor,
+    this.debtColor = Colors.red,
   });
 
   @override
@@ -26,6 +28,7 @@ class DebtorListWidget extends StatelessWidget {
           onUpdateDebt: (newDebt) => onUpdateDebt(debtors[index].id, newDebt),
           onViewDetails: () => onViewDetails(debtors[index]),
           onDeleteDebtor: onDeleteDebtor,
+          debtColor: debtors[index].debtColor,
         );
       },
     );

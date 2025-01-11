@@ -99,7 +99,10 @@ class LocalStorage {
 
   Future<List<Map<String, dynamic>>> getDebtors() async {
     final db = await database;
-    return await db.query('debtors');
+    return await db.query(
+      'debtors',
+      orderBy: 'name COLLATE NOCASE ASC',
+    );
   }
 
   Future<List<Map<String, dynamic>>> getTransactions(String debtorId) async {

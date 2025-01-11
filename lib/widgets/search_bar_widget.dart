@@ -33,12 +33,20 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      decoration: const InputDecoration(
-        labelText: 'Знайти боржника',
-        border: OutlineInputBorder(),
-      ),
-      onChanged: _filterDebtors,
+    return Row(
+      children: [
+        SizedBox(
+          width: 10,
+        ),
+        Expanded(
+          child: TextField(
+            decoration: const InputDecoration(
+              labelText: 'Знайти',
+            ),
+            onChanged: _filterDebtors,
+          ),
+        ),
+      ],
     );
   }
 }
