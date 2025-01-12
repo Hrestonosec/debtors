@@ -1,16 +1,6 @@
-# debtors
+Мобільний додаток для обліку боржників в продуктовому магазині.
+Покликаний замінити зошити, які досі розповсюджені в невеликих торгових точках в тисячах сел України.
+Має функцію збереження даних у хмарі на випадок втрати доступу до додатку
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Нижче наведено діаграму класів додатку
+![image](https://github.com/user-attachments/assets/2f40bf4c-74d5-4f79-8ad8-9abb39931a98)
